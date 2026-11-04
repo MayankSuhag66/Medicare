@@ -1,6 +1,8 @@
 import json
+import importlib
 import os
 import unittest
+from http.server import BaseHTTPRequestHandler
 from unittest.mock import patch
 
 import backend
@@ -21,6 +23,12 @@ class FakeResponse:
 
 
 class ProviderTests(unittest.TestCase):
+    def test_vercel_function_entrypoints(self):
+        for route in ("status", "config", "chat", "analyze"):
+            with self.subTest(route=route):
+                module = importlib.import_module(f"api.{route}")
+                self.assertTrue(issubclass(module.handler, BaseHTTPRequestHandler))
+
     def test_default_models_and_provider_shapes(self):
         cases = [
             ("gemini", "generativelanguage.googleapis.com", "gemini-2.5-flash", {"candidates": [{"content": {"parts": [{"text": "Hello"}]}}]}),

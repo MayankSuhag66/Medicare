@@ -1,1 +1,5 @@
-from backend import APIHandler as handler
+from backend import APIHandler
+
+
+class handler(APIHandler):
+    pass
