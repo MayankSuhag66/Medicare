@@ -21,7 +21,7 @@ If the Google OAuth app is in testing mode, add your test Google accounts in Goo
 
 ## Deploy to Vercel
 
-Import this folder as a Vercel project with **Framework Preset: Other** and **Root Directory: this folder**. No build command or output directory is needed. The root HTML/CSS/JS are static; `api/*.py` are Vercel Python Functions and use the same `backend.py` logic as the local server.
+Import this folder as a Vercel project with **Framework Preset: Other** and **Root Directory: this folder**. Do not set a build command or output directory. `vercel.json` explicitly builds the four `api/*.py` Python Functions and only the HTML/CSS/JS assets as static files; server source, SQL and project notes must not be publicly served. The functions share the same `backend.py` logic as the local server. After deploying, `/api/status` must return JSON (not a 404), and `/backend.py` must return 404.
 
 In **Vercel → Project Settings → Environment Variables**, add the values from `.env.example` for Production (and Preview if needed), then redeploy. **Vercel does not read your local `.env` at deployment time.** Keep `.env` untracked; `.gitignore` and `.vercelignore` exclude it. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are public configuration returned via `/api/config`; this is how browser Supabase Auth works. The anon key is *not* a secret. RLS is essential. AI keys are server-only and are never returned to the browser.
 

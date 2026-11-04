@@ -22,7 +22,7 @@ Last updated: 5 November 2026. This file is a continuity note for a future chat 
 | `supabase/schema.sql` | Private `documents` table, grants, and per-user row-level security (RLS) policies. |
 | `.env.example` | Template for local environment variables. **Not real credentials.** |
 | `.gitignore`, `.vercelignore` | Exclude `.env`, build artifacts, and local state. |
-| `vercel.json` | Minimal Vercel project configuration; use Framework Preset **Other**. |
+| `vercel.json` | Explicit Python Function and static-asset build/route allowlist for Vercel; use Framework Preset **Other**. |
 | `tests/test_backend.py` | Standard-library unit tests for provider payloads, JSON handling, token checks, and OpenRouter free-model guard. |
 | `README.md` | Full local setup, deployment, free-tier cautions, and limitations. |
 
