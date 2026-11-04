@@ -21,7 +21,7 @@ If the Google OAuth app is in testing mode, add your test Google accounts in Goo
 
 ## Deploy to Vercel
 
-Import this folder as a Vercel project with **Framework Preset: Other** and **Root Directory: this folder**. Do not set a build command or output directory. `vercel.json` explicitly builds the four `api/*.py` Python Functions and only the HTML/CSS/JS assets as static files; server source, SQL and project notes must not be publicly served. The functions share the same `backend.py` logic as the local server. After deploying, `/api/status` must return JSON (not a 404), and `/backend.py` must return 404.
+Import this folder as a Vercel project with **Framework Preset: Other** and **Root Directory: this folder**. Do not set a build command or output directory. `vercel.json` explicitly builds the four `api/*.py` Python Functions and only the HTML/CSS/JS, favicon and social-preview image as static files; server source, SQL and project notes must not be publicly served. The functions share the same `backend.py` logic as the local server. After deploying, `/api/status` must return JSON (not a 404), and `/backend.py` must return 404.
 
 In **Vercel → Project Settings → Environment Variables**, add the values from `.env.example` for Production (and Preview if needed), then redeploy. **Vercel does not read your local `.env` at deployment time.** Keep `.env` untracked; `.gitignore` and `.vercelignore` exclude it. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are public configuration returned via `/api/config`; this is how browser Supabase Auth works. The anon key is *not* a secret. RLS is essential. AI keys are server-only and are never returned to the browser.
 
@@ -48,6 +48,7 @@ AI calls require a signed-in Supabase user. The server validates each access tok
 ## Capabilities and limitations
 
 - The site starts in dark mode. Use the sun/moon button in the header to switch themes; your choice is remembered in this browser.
+- The browser tab uses `favicon.ico`. Shared links use a 1200 × 630 `og-image.png` with Open Graph and Twitter Card metadata; crawlers may cache previews, so updates may not appear immediately.
 - Browser OCR uses Tesseract.js and PDF.js; PDF export uses jsPDF. These, Supabase JS, fonts, and the homepage image load from third-party hosts. Internet access is required for these features.
 - PDF/JPG/PNG up to 15 MB; first five PDF pages processed. AI analysis sends at most the first 12,000 OCR characters; document chat sends at most 10,000 context characters.
 - Unsaved results remain only in memory for the current tab. Saved history stores extracted text, name, editable result, and document type in Supabase with RLS. Original files are never saved. Deleting saved history removes the row from Supabase.

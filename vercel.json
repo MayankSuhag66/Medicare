@@ -3,6 +3,8 @@
   "builds": [
     { "src": "api/*.py", "use": "@vercel/python" },
     { "src": "index.html", "use": "@vercel/static" },
+    { "src": "favicon.ico", "use": "@vercel/static" },
+    { "src": "og-image.png", "use": "@vercel/static" },
     { "src": "app.js", "use": "@vercel/static" },
     { "src": "styles.css", "use": "@vercel/static" },
     { "src": "theme.css", "use": "@vercel/static" }
