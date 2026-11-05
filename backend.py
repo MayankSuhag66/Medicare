@@ -50,7 +50,7 @@ SCHEMAS = {
 }
 
 PROVIDERS = {
-    "gemini": ("GEMINI_API_KEY", "GEMINI_MODEL", "gemini-2.5-flash"),
+    "gemini": ("GEMINI_API_KEY", "GEMINI_MODEL", "gemini-3.1-flash-lite"),
     "groq": ("GROQ_API_KEY", "GROQ_MODEL", "llama-3.3-70b-versatile"),
     "openrouter": ("OPENROUTER_API_KEY", "OPENROUTER_MODEL", "openrouter/free"),
     "cohere": ("COHERE_API_KEY", "COHERE_MODEL", "command-r7b-12-2024"),
@@ -120,6 +120,20 @@ def verify_user(token):
             return bool(json.load(response).get("id"))
     except (HTTPError, URLError, ValueError):
         return False
+
+
+def provider_http_error(error):
+    """Explain upstream failures without returning provider bodies or secrets to the browser."""
+    if error.code == 429:
+        return 429, "Provider rate limit reached. Try later or choose another free provider."
+    if error.code == 404:
+        return 502, "Provider model not found or unavailable. Check the configured model name and access in the provider dashboard."
+    if error.code in (401, 403):
+        body = error.read(512).decode("utf-8", errors="replace")
+        if error.code == 403 and "error code: 1010" in body.lower():
+            return 502, "Provider blocked requests from this server (Cloudflare 1010). Check the server region or contact the provider."
+        return 502, "Provider rejected access. Check the API key, project permissions, billing status, and regional availability."
+    return 502, "Provider request failed. Check its key, model, and free-tier availability."
 
 
 class APIHandler(BaseHTTPRequestHandler):
@@ -199,8 +213,8 @@ class APIHandler(BaseHTTPRequestHandler):
         except (ValueError, json.JSONDecodeError):
             return self.respond(400, {"error": "Could not process the request."})
         except HTTPError as error:
-            message = "Provider rate limit reached. Try later or choose another free provider." if error.code == 429 else "Provider request failed. Check its key, model, and free-tier availability."
-            return self.respond(429 if error.code == 429 else 502, {"error": message})
+            status, message = provider_http_error(error)
+            return self.respond(status, {"error": message})
         except URLError:
             return self.respond(502, {"error": "Provider is temporarily unavailable."})
         except Exception:

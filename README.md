@@ -35,7 +35,7 @@ Configure any combination in `.env` locally and in Vercel Environment Variables 
 
 | Provider | Key variable | Default model | Important |
 |---|---|---|---|
-| Google Gemini | `GEMINI_API_KEY` | `gemini-2.5-flash` | Free tier subject to changing quotas and data-use terms. |
+| Google Gemini | `GEMINI_API_KEY` | `gemini-3.1-flash-lite` | Free tier subject to changing quotas and data-use terms. If `GEMINI_MODEL` is set in Vercel, update it there too and redeploy. |
 | Groq | `GROQ_API_KEY` | `llama-3.3-70b-versatile` | Free plan has rate limits. |
 | OpenRouter | `OPENROUTER_API_KEY` | `openrouter/free` | Routes only to free models; daily limits and provider privacy policies vary. |
 | Cohere | `COHERE_API_KEY` | `command-r7b-12-2024` | Free evaluation/trial keys are **not** a production free tier; verify licensing before using in a public deployment. |
